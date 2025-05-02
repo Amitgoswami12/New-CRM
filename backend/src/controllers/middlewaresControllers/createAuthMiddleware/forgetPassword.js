@@ -13,16 +13,18 @@ const forgetPassword = async (req, res, { userModel }) => {
   const UserPassword = mongoose.model(userModel + 'Password');
   const User = mongoose.model(userModel);
   const { email } = req.body;
-
+  console.log("hello")
   // validate
   const objectSchema = Joi.object({
     email: Joi.string()
       .email({ tlds: { allow: true } })
       .required(),
   });
-
+  console.log(email, 'email')
   const { error, value } = objectSchema.validate({ email });
+  console.log(error, 'error')
   if (error) {
+    console.log(error);
     return res.status(409).json({
       success: false,
       result: null,
@@ -33,15 +35,16 @@ const forgetPassword = async (req, res, { userModel }) => {
   }
 
   const user = await User.findOne({ email: email, removed: false });
-  const databasePassword = await UserPassword.findOne({ user: user._id, removed: false });
-
-  // console.log(user);
   if (!user)
     return res.status(404).json({
       success: false,
       result: null,
       message: 'No account with this email has been registered.',
     });
+  const databasePassword = await UserPassword.findOne({ user: user._id, removed: false });
+
+  // console.log(user);
+
 
   const resetToken = shortid.generate();
   await UserPassword.findOneAndUpdate(

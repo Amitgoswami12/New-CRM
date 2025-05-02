@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, message, Typography } from 'antd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '@/config/serverApiConfig';
 
 const { Title } = Typography;
 
@@ -12,7 +13,7 @@ const Signup = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/coreAuth/register', values);
+      const response = await axios.post(API_BASE_URL + `register`, values);
       message.success('Registration successful!');
       navigate('/login');
     } catch (error) {
